@@ -1,43 +1,95 @@
+Skip to content
+Search or jump to…
+
+Pull requests
+Issues
+Marketplace
+Explore
+ 
+@AbhinavTheOG 
+benguarasci
+/
+benguarasci.github.io
+1
+00
+Code
+Issues
+Pull requests
+Actions
+Projects
+Wiki
+Security
+Insights
+benguarasci.github.io/main.js /
+@AbhinavTheOG
+AbhinavTheOG Updated main with bubble rep
+Latest commit ab0e142 2 hours ago
+ History
+ 2 contributors
+@benguarasci@AbhinavTheOG
+265 lines (241 sloc)  7.45 KB
+  
 // Globals
 // This was taken out of the function for a check being done
 var num_trial = 0;
-var NB_VALUES = 4;
+var NB_VALUES = 3;
 var rep_check;
-var table_data = [];
-
-
+var row_count = 1;
+var curr_repetition = 0;
+var ran_array = [];
+var bubble_min_radius, bubble_max_radius;
 function reset_counts() {
 	num_trial = 0;
-	NB_VALUES = 4;
+	NB_VALUES = 3;
+	row_count = 1;
+	ran_array.length = 0;
 }
 
+function random_num(input_num) {
+ 	if(ran_array.length == 0) {
+		ran_array.push(input_num);
+		console.log(ran_array);
+		return input_num;
+	} else {
+		if(ran_array.includes(input_num)) {
+			return random_num(Math.floor(Math.random() * 100));
+		} else {
+			ran_array.push(input_num);
+			console.log(ran_array);
+			return input_num;
+		}
+	}
+}
+
+function padding(number_pad) {
+	var new_number = number_pad.toString();
+	if(new_number.length == 1) {
+		return new_number.padStart(2, '0');
+	}
+	return number_pad;
+}
 function textTest() {
 	start_button.style.display = 'none';
 	rep_check = 0;
-	main();
+	beginTrials();
 }
 
 function barTest() {
 	start_button.style.display = 'none';
 	rep_check = 1;
-	main();
+	beginTrials();
 }
 
-  function generateTable(table, data) {
-	for (let element of data) {
-	  let row = table.insertRow();
-	  for (key in element) {
-		let cell = row.insertCell();
-		let text = document.createTextNode(element[key]);
-		cell.appendChild(text);
-	  }
-	}
-  }
-  
-function main() {
+
+function beginTrials() {
 	var width = 400;
 	var height = 400;
+	var divisor;
 	var time_start = new Date();
+	var sort_values = [];
+	var num;
+	var med;
+	var curr_condition;
 	
 	//toggle bubble chart or text representation
 	var REPRESENTATION;
@@ -59,8 +111,20 @@ function main() {
 		.style("display", "block")
 		.style("border", "1px solid black");
 		
-	var values = d3.range(NB_VALUES).map(d => Math.floor(Math.random() * 100)) // the randomly generated set of values between 0 and 99
-
+	var values = d3.range(NB_VALUES).map(d => random_num(Math.floor(Math.random() * 100))) // the randomly generated set of values between 0 and 99
+	num = values.length;
+	// Creating a copy of the values to find median
+	for(i = 0; i < num; i++) {
+		sort_values[i] = values[i];
+	}
+	sort_values = sort_values.sort(function(x, y) { return x - y;});
+	// Since all the amounts of numbers shown are odd
+	var index = Math.floor(num/2);
+	med = sort_values[index];
+	console.log(values);
+	console.log(sort_values);
+	console.log(med);
+	
 	var pad = 5 //padding for grid layout (text and bubble)
 	var numCol, numRow; // number of columns, number of rows
 	var bubble_min_radius, bubble_max_radius;
@@ -68,36 +132,50 @@ function main() {
 	
 	var font_size;
 	
-	if(NB_VALUES == 4){
-		numCol = 2;
-		numRow = 2;
-		_w = width/numCol
-		_h = height/numRow
-	  
-		bubble_min_radius = 1;// arbitrary, could be 0, or something else
-		bubble_max_radius = (_w/2 - pad*2);
-		
-		font_size = 48// arbitrary choice
-	  }else if(NB_VALUES == 9){
+	if(NB_VALUES == 3){
 		numCol = 3;
 		numRow = 3;
 		_w = width/numCol
 		_h = height/numRow
+		divisor = 0.63;
+		curr_condition = 'n3';
 
 		bubble_min_radius = 1;// arbitrary, could be 0, or something else
 		bubble_max_radius = (_w/2 - pad*2);
-		
-		font_size = 48// arbitrary choice
-	  }else if(NB_VALUES == 25){
+		font_size = 60// arbitrary choice
+	} else if(NB_VALUES == 5)  {
 		numCol = 5;
 		numRow = 5;
 		_w = width/numCol
 		_h = height/numRow
+		divisor = 0.38;
+		curr_condition = 'n5';
 
 		bubble_min_radius = 1;// arbitrary, could be 0, or something else
 		bubble_max_radius = (_w/2 - pad*2);
-		
-		font_size = 48// arbitrary choice
+		font_size = 50// arbitrary choice
+	}else if(NB_VALUES == 9){
+		numCol = 3;
+		numRow = 3;
+		_w = width/numCol
+		_h = height/numRow
+		divisor = 1.63;
+		curr_condition = 'n9';
+
+		bubble_min_radius = 1;// arbitrary, could be 0, or something else
+		bubble_max_radius = (_w/2 - pad*2);
+		font_size = 60// arbitrary choice
+	} else if(NB_VALUES == 25) {
+		numCol = 5;
+		numRow = 5;
+		_w = width/numCol
+		_h = height/numRow
+		divisor = 1.38;
+		curr_condition = 'n25';
+
+		bubble_min_radius = 1;// arbitrary, could be 0, or something else
+		bubble_max_radius = (_w/2 - pad*2);
+		font_size = 50// arbitrary choice
 	}
 		
 	var sign = svg.selectAll('g') // create one group element to display each value, puts it at its position
@@ -106,37 +184,46 @@ function main() {
 		.append('g')
 		.attr('transform', function(d, i){
 			switch(REPRESENTATION){
-			  case 'text':
-			  case 'bubble':
-				  return 'translate(' + ((i%numCol)*_w + (pad/2)*-1) + ','+ ((Math.floor(i/numRow))*_h + (pad/2)*-1) +')'
+				case 'bubble':
+					return 'translate(' + ((i%numCol)*_w + (pad/2)*-1) + ','+ ((Math.floor(i/numRow))*_h + (pad/2)*-1) +')'
+				case 'text':
+					return 'translate(' + ((i%numCol)*_w + (pad/2)*-1) + ','+ ((Math.floor(i/numRow))*_h + (pad/2)*-1) +')'
 				break;
-			  case 'bar':
-				  return 'translate(' + (i*width/NB_VALUES) + ','+ (height) +')'
+				case 'bar':
+					return 'translate(' + (i*width/NB_VALUES) + ','+ (height) +')'
 				break;
 				default: console.error('unknown representation',REPRESENTATION);
 			}
-		}).on('click', function(d,i){
+		}).on('click', function(d, i){
 			var time_click = new Date() - time_start;
-			table_data.push({
-				Representation: REPRESENTATION,
-				numValues: 'n' + values.length,
-				values:   values.toString(),
-				correct_ans:  Math.min.apply(null, values),
-				clicked: i,
-				time: time_click,
-			});
-			
-			let table = document.getElementById("fin_results");
-
-
-
-
+			var fin_table = document.getElementById('fin_results');
+			var new_row = fin_table.insertRow(row_count);
+				var cell1 = new_row.insertCell(0);
+				cell1.innerHTML = REPRESENTATION;
+				var cell2 = new_row.insertCell(1);
+				cell2.innerHTML = curr_condition;
+				var cell3 = new_row.insertCell(2);
+				cell3.innerHTML = curr_condition + "-" + curr_repetition;
+				curr_repetition = curr_repetition + 1;
+				var cell4 = new_row.insertCell(3);
+				cell4.innerHTML = values;
+				var cell5 = new_row.insertCell(4);
+				cell5.innerHTML = med;
+				var cell6 = new_row.insertCell(5);
+				cell6.innerHTML = i;
+				var cell7 = new_row.insertCell(6);
+				cell7.innerHTML = time_click;
+			row_count = row_count + 1;
+			console.log("clicked: ", i)
+			ran_array.length = 0;
 			d3.select("svg").remove();
 			num_trial = num_trial + 1;
-			
-			if(num_trial == 3) {
+			if(num_trial == 5) {
+				curr_repetition = 0;
 				num_trial = 0;
-				if(NB_VALUES == 4) {
+				if(NB_VALUES == 3) {
+					NB_VALUES = 5;
+				} else if (NB_VALUES == 5) {
 					NB_VALUES = 9;
 				} else if (NB_VALUES == 9) {
 					NB_VALUES = 25;
@@ -145,19 +232,15 @@ function main() {
 						d3.select("#task").text("Please copy your results onto your text file and move on to the Bar Graph Trials by clicking the button at the bottom of the page.")
 						next_button.style.display = 'block';
 					} else if(rep_check == 1) {
-						d3.select("#task").text("Please copy your results onto your text file. Then, send it to Benjamin Guarasci. on Slack.\nOnce you are done, please fill in our survey by cliking the button at the bottom of the page.")
+						d3.select("#task").text("Please copy your results onto your text file. Then, send it to John Frederick Duco on Slack.\nOnce you are done, please fill in our survey by cliking the button at the bottom of the page.")
 						q.style.display = 'block';
 					}
-					
-
-					generateTable(table, table_data);
 					res_table.style.display = 'table';
-
 					reset_counts();
 					return;
 				}
 			}
-			main();
+			beginTrials();
 		}).style('cursor','pointer')//make it a pointer on mouseover
 	
 	if(REPRESENTATION == "text") {
@@ -170,10 +253,10 @@ function main() {
   
 		sign.append('text')
 			.attr('x', _w/2)
-			.attr('y', _w/2)
+			.attr('y', _w/divisor)
 			.attr('text-anchor','middle')
 			.attr('font-size', font_size+"px")
-			.text(d => d)
+			.text(d => padding(d))
 	} else if(REPRESENTATION == "bubble"){
   
 		//that's to create a perceptual scaling by mapping square root of value to radius, but other scaling functions could be used
@@ -211,3 +294,15 @@ function main() {
 	}
 	return svg.node()
 }
+© 2021 GitHub, Inc.
+Terms
+Privacy
+Security
+Status
+Docs
+Contact GitHub
+Pricing
+API
+Training
+Blog
+About
