@@ -13,13 +13,13 @@ function reset_counts() {
 
 function textTest() {
 	start_button.style.display = 'none';
-	rep_check = 0;
+	rep_check = 1;
 	main();
 }
 
-function barTest() {
+function bubbleTest() {
 	start_button.style.display = 'none';
-	rep_check = 1;
+	rep_check = 0;
 	main();
 }
 
@@ -42,9 +42,9 @@ function main() {
 	//toggle bubble chart or text representation
 	var REPRESENTATION;
 	if(rep_check == 0) {
-		REPRESENTATION = "text";
-	} else if(rep_check == 1) {
 		REPRESENTATION = "bubble";
+	} else if(rep_check == 1) {
+		REPRESENTATION = "text";
 	}
 	
 	const MIN_VALUE = 0;
@@ -126,7 +126,7 @@ function main() {
 				time: time_click,
 			});
 			
-			let table = document.getElementById("fin_results");
+			let table = document.getElementById("outputTable");
 
 
 
@@ -142,11 +142,12 @@ function main() {
 					NB_VALUES = 25;
 				} else if (NB_VALUES == 25) {
 					if(rep_check == 0) {
-						d3.select("#task").text("Please copy your results onto your text file and move on to the Bar Graph Trials by clicking the button at the bottom of the page.")
-						next_button.style.display = 'block';
+						d3.select("#task").text("Please copy your results onto your text file and move on to the text Graph Trials by clicking the button at the bottom of the page.")
+						q.style.display = 'block';
+						
 					} else if(rep_check == 1) {
 						d3.select("#task").text("Please copy your results onto your text file. Then, send it to Benjamin Guarasci. on Slack.\nOnce you are done, please fill in our survey by cliking the button at the bottom of the page.")
-						q.style.display = 'block';
+						next_button.style.display = 'block';
 					}
 					
 
