@@ -120,6 +120,7 @@ function main() {
 			table_data.push({
 				Representation: REPRESENTATION,
 				numValues: 'n' + values.length,
+				Repetition: 'n' + values.length + '-' + num_trial,
 				values:   values.toString(),
 				correct_ans:  Math.min.apply(null, values),
 				clicked: i,
@@ -142,11 +143,11 @@ function main() {
 					NB_VALUES = 25;
 				} else if (NB_VALUES == 25) {
 					if(rep_check == 0) {
-						d3.select("#task").text("Please copy your results onto your text file and move on to the text Graph Trials by clicking the button at the bottom of the page.")
+						d3.select("#task").text("Insert this table into the text file.")
 						q.style.display = 'block';
 						
 					} else if(rep_check == 1) {
-						d3.select("#task").text("Please copy your results onto your text file. Then, send it to Benjamin Guarasci. on Slack.\nOnce you are done, please fill in our survey by cliking the button at the bottom of the page.")
+						d3.select("#task").text("Insert this table into the text file. Then, send it to Benjamin Guarasci. on Slack.\n Thank you for participatng! Please complete the exit questionnaire.")
 						next_button.style.display = 'block';
 					}
 					
