@@ -1,15 +1,15 @@
 // Globals
 // This was taken out of the function for a check being done
 var num_trial = 0;
-var NB_VALUES = 3;
+var NB_VALUES = 4;
 var rep_check;
 var row_count = 1;
 var curr_repetition = 0;
 var ran_array = [];
-var bubble_min_radius, bubble_max_radius;
+
 function reset_counts() {
 	num_trial = 0;
-	NB_VALUES = 3;
+	NB_VALUES = 4;
 	row_count = 1;
 	ran_array.length = 0;
 }
@@ -17,25 +17,15 @@ function reset_counts() {
 function random_num(input_num) {
  	if(ran_array.length == 0) {
 		ran_array.push(input_num);
-		console.log(ran_array);
 		return input_num;
 	} else {
 		if(ran_array.includes(input_num)) {
 			return random_num(Math.floor(Math.random() * 100));
 		} else {
 			ran_array.push(input_num);
-			console.log(ran_array);
 			return input_num;
 		}
 	}
-}
-
-function padding(number_pad) {
-	var new_number = number_pad.toString();
-	if(new_number.length == 1) {
-		return new_number.padStart(2, '0');
-	}
-	return number_pad;
 }
 function textTest() {
 	start_button.style.display = 'none';
@@ -53,7 +43,6 @@ function barTest() {
 function beginTrials() {
 	var width = 400;
 	var height = 400;
-	var divisor;
 	var time_start = new Date();
 	var sort_values = [];
 	var num;
@@ -90,10 +79,7 @@ function beginTrials() {
 	// Since all the amounts of numbers shown are odd
 	var index = Math.floor(num/2);
 	med = sort_values[index];
-	console.log(values);
-	console.log(sort_values);
-	console.log(med);
-	
+
 	var pad = 5 //padding for grid layout (text and bubble)
 	var numCol, numRow; // number of columns, number of rows
 	var bubble_min_radius, bubble_max_radius;
@@ -101,51 +87,40 @@ function beginTrials() {
 	
 	var font_size;
 	
-	if(NB_VALUES == 3){
+	if(NB_VALUES == 4){
+		numCol = 2;
+		numRow = 2;
+		_w = width/numCol
+		_h = height/numRow
+		curr_condition = 'n3'; // change this!!!!!!!!!!!!!!!!!
+	  
+		bubble_min_radius = 1;// arbitrary, could be 0, or something else
+		bubble_max_radius = (_w/2 - pad*2);
+		
+		font_size = 48// arbitrary choice
+	  }else if(NB_VALUES == 9){
 		numCol = 3;
 		numRow = 3;
 		_w = width/numCol
 		_h = height/numRow
-		divisor = 0.63;
-		curr_condition = 'n3';
+		curr_condition = 'n9'; // change this!!!!!!!!!!!!!!!!!
 
 		bubble_min_radius = 1;// arbitrary, could be 0, or something else
 		bubble_max_radius = (_w/2 - pad*2);
-		font_size = 60// arbitrary choice
-	} else if(NB_VALUES == 5)  {
+		
+		font_size = 48// arbitrary choice
+	  }else if(NB_VALUES == 25){
 		numCol = 5;
 		numRow = 5;
 		_w = width/numCol
 		_h = height/numRow
-		divisor = 0.38;
-		curr_condition = 'n5';
+		curr_condition = 'n25'; // change this!!!!!!!!!!!!!!!!!
 
 		bubble_min_radius = 1;// arbitrary, could be 0, or something else
 		bubble_max_radius = (_w/2 - pad*2);
-		font_size = 50// arbitrary choice
-	}else if(NB_VALUES == 9){
-		numCol = 3;
-		numRow = 3;
-		_w = width/numCol
-		_h = height/numRow
-		divisor = 1.63;
-		curr_condition = 'n9';
-
-		bubble_min_radius = 1;// arbitrary, could be 0, or something else
-		bubble_max_radius = (_w/2 - pad*2);
-		font_size = 60// arbitrary choice
-	} else if(NB_VALUES == 25) {
-		numCol = 5;
-		numRow = 5;
-		_w = width/numCol
-		_h = height/numRow
-		divisor = 1.38;
-		curr_condition = 'n25';
-
-		bubble_min_radius = 1;// arbitrary, could be 0, or something else
-		bubble_max_radius = (_w/2 - pad*2);
-		font_size = 50// arbitrary choice
-	}
+		
+		font_size = 48// arbitrary choice
+	  }
 		
 	var sign = svg.selectAll('g') // create one group element to display each value, puts it at its position
 		.data(values)
@@ -187,12 +162,10 @@ function beginTrials() {
 			ran_array.length = 0;
 			d3.select("svg").remove();
 			num_trial = num_trial + 1;
-			if(num_trial == 5) {
+			if(num_trial == 3) {
 				curr_repetition = 0;
 				num_trial = 0;
-				if(NB_VALUES == 3) {
-					NB_VALUES = 5;
-				} else if (NB_VALUES == 5) {
+				if(NB_VALUES == 4) {
 					NB_VALUES = 9;
 				} else if (NB_VALUES == 9) {
 					NB_VALUES = 25;
@@ -222,10 +195,10 @@ function beginTrials() {
   
 		sign.append('text')
 			.attr('x', _w/2)
-			.attr('y', _w/divisor)
+			.attr('y', _w/2)
 			.attr('text-anchor','middle')
 			.attr('font-size', font_size+"px")
-			.text(d => padding(d))
+			.text(d => d)
 	} else if(REPRESENTATION == "bubble"){
   
 		//that's to create a perceptual scaling by mapping square root of value to radius, but other scaling functions could be used
