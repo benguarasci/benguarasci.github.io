@@ -2,21 +2,18 @@
 <html> 
 <head>
 	<script src="https://d3js.org/d3.v6.min.js"></script>
-	<title>Data Collection</title>
-	<meta charset="UTF-8" name="collection" content="width=device-width, initial-scale=1.0"/>
-	<link rel="stylesheet" href="data_styles.css">
+	<link rel="stylesheet" href="stylesheet.css">
 </head>
 
 <body>
 <script type="text/javascript" src="main.js"></script>
 <div class="header">
-	<h1 id="title_text"></h1><hr>
-	<h2 id="subtitle">Bar Graph Representation</h2>
-	<p id="task" align="center">Your task is to <b>find the median value</b> from the given set of numbers represented as Bar Graphs.</p>
+	<h1 id="test">BUBBLE REPRESENTATION</h1>
+	<p id="task" align="center">Click the smallest bubble!</p>
 </div>
 
 <div id="start_button">
-	<button type="button" onclick="barTest()">Begin Bar Graph Trials</button><br>
+	<button type="button" onclick="barTest()">Begin Bubble Trials</button><br>
 </div>
 
 <div id="test_container">
@@ -38,9 +35,8 @@
 	<br>
 </div>
 
-<div id="questionnaire">
-	<button type="button" onclick="location.href='https://docs.google.com/forms/d/e/1FAIpQLSdgNzRAJ3vmbrnPaKGgFfrzCVDUF4GN3qW2nsOvhhICNDy8sQ/viewform?usp=sf_link'">Experiment Survey</button>
-	<p id="site" align="center"> This will help us with our analysis.<br>Thank you for participating in our experiment! </p>
+<div id="next_page2">
+	<button type="button" onclick="location.href='text.html'">Text Representation</button><br>
 </div>
 
 <script type="text/javascript">
@@ -48,7 +44,7 @@
 		.style('color', 'black')
 		.style('font-size', '40px')
 		
-	var q = document.getElementById("questionnaire");
+	var q = document.getElementById("next_page2");
 	q.style.display = 'none';
 	
 	var res_table = document.getElementById("fin_results");

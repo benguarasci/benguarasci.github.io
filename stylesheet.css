@@ -1,5 +1,9 @@
+.test{
+	font-family: Helvetica, sans-serif;
+}
+
 body {
-	font-family: Monsterrat;
+	font-family: Helvetica, sans-serif;
 }
 h1 {
 	text-align: center;

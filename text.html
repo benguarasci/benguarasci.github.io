@@ -2,17 +2,14 @@
 <html> 
 <head>
 	<script src="https://d3js.org/d3.v6.min.js"></script>
-	<title>Data Collection</title>
-	<meta charset="UTF-8" name="collection" content="width=device-width, initial-scale=1.0"/>
-	<link rel="stylesheet" href="data_styles.css">
+	<link rel="stylesheet" href="stylesheet.css">
 </head>
 
 <body>
 <script type="text/javascript" src="main.js"></script>
 <div class="header">
-	<h1 id="title_text"></h1><hr>
-	<h2 id="subtitle">Text Representation</h2>
-	<p id="task" align="center">Your task is to <b>find the median value</b> from the given set of numbers.</p>
+	<h1 id="test">TEXT REPRESENTATION</h2>
+	<p id="task" align="center">Click the smallest number!</p>
 </div>
 
 <div id="start_button">
@@ -38,8 +35,9 @@
 	<br>
 </div>
 
-<div id="next_page2">
-	<button type="button" onclick="location.href='bubbles.html'">Bar Graph Trials</button><br>
+<div id="questionnaire">
+	<button type="button" onclick="location.href='https://docs.google.com/forms/d/e/1FAIpQLSdgNzRAJ3vmbrnPaKGgFfrzCVDUF4GN3qW2nsOvhhICNDy8sQ/viewform?usp=sf_link'">Questionnaire</button>
+	<p id="site" align="center"> This will help us with our analysis.<br>Thank you for participating in our experiment! </p>
 </div>
 
 <script type="text/javascript">
@@ -47,7 +45,7 @@
 		.style('color', 'black')
 		.style('font-size', '40px')
 	
-	var next_button = document.getElementById("next_page2");
+	var next_button = document.getElementById("questionnaire");
 	next_button.style.display = 'none';
 	
 	var res_table = document.getElementById("fin_results");
