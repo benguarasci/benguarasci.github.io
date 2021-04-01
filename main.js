@@ -3,51 +3,39 @@
 var num_trial = 0;
 var NB_VALUES = 4;
 var rep_check;
-var row_count = 1;
-var curr_repetition = 0;
-var ran_array = [];
 
 function reset_counts() {
 	num_trial = 0;
 	NB_VALUES = 4;
-	row_count = 1;
-	ran_array.length = 0;
 }
 
-function random_num(input_num) {
- 	if(ran_array.length == 0) {
-		ran_array.push(input_num);
-		return input_num;
-	} else {
-		if(ran_array.includes(input_num)) {
-			return random_num(Math.floor(Math.random() * 100));
-		} else {
-			ran_array.push(input_num);
-			return input_num;
-		}
-	}
-}
 function textTest() {
 	start_button.style.display = 'none';
 	rep_check = 0;
-	beginTrials();
+	main();
 }
 
 function barTest() {
 	start_button.style.display = 'none';
 	rep_check = 1;
-	beginTrials();
+	main();
 }
 
+function create_table(representation, numValues, values, correct_ans, clicked, time){
+	this.representation = representation;
+	this.numValues = 'n' + numValues;
+	this.values = values;
+	this.correct_ans = correct_ans;
+	this.clicked = clicked;
+	this.time = time;
+	
+ }
+   
 
-function beginTrials() {
+function main() {
 	var width = 400;
 	var height = 400;
 	var time_start = new Date();
-	var sort_values = [];
-	var num;
-	var med;
-	var curr_condition;
 	
 	//toggle bubble chart or text representation
 	var REPRESENTATION;
@@ -69,16 +57,7 @@ function beginTrials() {
 		.style("display", "block")
 		.style("border", "1px solid black");
 		
-	var values = d3.range(NB_VALUES).map(d => random_num(Math.floor(Math.random() * 100))) // the randomly generated set of values between 0 and 99
-	num = values.length;
-	// Creating a copy of the values to find median
-	for(i = 0; i < num; i++) {
-		sort_values[i] = values[i];
-	}
-	sort_values = sort_values.sort(function(x, y) { return x - y;});
-	// Since all the amounts of numbers shown are odd
-	var index = Math.floor(num/2);
-	med = sort_values[index];
+	var values = d3.range(NB_VALUES).map(d => Math.floor(Math.random() * 100)) // the randomly generated set of values between 0 and 99
 
 	var pad = 5 //padding for grid layout (text and bubble)
 	var numCol, numRow; // number of columns, number of rows
@@ -92,7 +71,6 @@ function beginTrials() {
 		numRow = 2;
 		_w = width/numCol
 		_h = height/numRow
-		curr_condition = 'n3'; // change this!!!!!!!!!!!!!!!!!
 	  
 		bubble_min_radius = 1;// arbitrary, could be 0, or something else
 		bubble_max_radius = (_w/2 - pad*2);
@@ -103,7 +81,6 @@ function beginTrials() {
 		numRow = 3;
 		_w = width/numCol
 		_h = height/numRow
-		curr_condition = 'n9'; // change this!!!!!!!!!!!!!!!!!
 
 		bubble_min_radius = 1;// arbitrary, could be 0, or something else
 		bubble_max_radius = (_w/2 - pad*2);
@@ -114,13 +91,12 @@ function beginTrials() {
 		numRow = 5;
 		_w = width/numCol
 		_h = height/numRow
-		curr_condition = 'n25'; // change this!!!!!!!!!!!!!!!!!
 
 		bubble_min_radius = 1;// arbitrary, could be 0, or something else
 		bubble_max_radius = (_w/2 - pad*2);
 		
 		font_size = 48// arbitrary choice
-	  }
+	}
 		
 	var sign = svg.selectAll('g') // create one group element to display each value, puts it at its position
 		.data(values)
@@ -128,42 +104,25 @@ function beginTrials() {
 		.append('g')
 		.attr('transform', function(d, i){
 			switch(REPRESENTATION){
-				case 'bubble':
-					return 'translate(' + ((i%numCol)*_w + (pad/2)*-1) + ','+ ((Math.floor(i/numRow))*_h + (pad/2)*-1) +')'
-				case 'text':
-					return 'translate(' + ((i%numCol)*_w + (pad/2)*-1) + ','+ ((Math.floor(i/numRow))*_h + (pad/2)*-1) +')'
+			  case 'text':
+			  case 'bubble':
+				  return 'translate(' + ((i%numCol)*_w + (pad/2)*-1) + ','+ ((Math.floor(i/numRow))*_h + (pad/2)*-1) +')'
 				break;
-				case 'bar':
-					return 'translate(' + (i*width/NB_VALUES) + ','+ (height) +')'
+			  case 'bar':
+				  return 'translate(' + (i*width/NB_VALUES) + ','+ (height) +')'
 				break;
 				default: console.error('unknown representation',REPRESENTATION);
 			}
-		}).on('click', function(d, i){
+		}).on('click', function(d,i){
 			var time_click = new Date() - time_start;
-			var fin_table = document.getElementById('fin_results');
-			var new_row = fin_table.insertRow(row_count);
-				var cell1 = new_row.insertCell(0);
-				cell1.innerHTML = REPRESENTATION;
-				var cell2 = new_row.insertCell(1);
-				cell2.innerHTML = curr_condition;
-				var cell3 = new_row.insertCell(2);
-				cell3.innerHTML = curr_condition + "-" + curr_repetition;
-				curr_repetition = curr_repetition + 1;
-				var cell4 = new_row.insertCell(3);
-				cell4.innerHTML = values;
-				var cell5 = new_row.insertCell(4);
-				cell5.innerHTML = med;
-				var cell6 = new_row.insertCell(5);
-				cell6.innerHTML = i;
-				var cell7 = new_row.insertCell(6);
-				cell7.innerHTML = time_click;
-			row_count = row_count + 1;
-			console.log("clicked: ", i)
-			ran_array.length = 0;
+			console.log('----------REPRESENTATION1 TRIAL1------------')
+			var R1T1 = new create_table(REPRESENTATION, values.length, values.toString(), Math.max.apply(null, values),i, time_click)
+			console.table(R1T1)
+
 			d3.select("svg").remove();
 			num_trial = num_trial + 1;
+			
 			if(num_trial == 3) {
-				curr_repetition = 0;
 				num_trial = 0;
 				if(NB_VALUES == 4) {
 					NB_VALUES = 9;
@@ -177,12 +136,12 @@ function beginTrials() {
 						d3.select("#task").text("Please copy your results onto your text file. Then, send it to John Frederick Duco on Slack.\nOnce you are done, please fill in our survey by cliking the button at the bottom of the page.")
 						q.style.display = 'block';
 					}
-					res_table.style.display = 'table';
+					//res_table.style.display = 'table';
 					reset_counts();
 					return;
 				}
 			}
-			beginTrials();
+			main();
 		}).style('cursor','pointer')//make it a pointer on mouseover
 	
 	if(REPRESENTATION == "text") {
