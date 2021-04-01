@@ -6,7 +6,7 @@ var rep_check;
 var row_count = 1;
 var curr_repetition = 0;
 var ran_array = [];
-
+var bubble_min_radius, bubble_max_radius;
 function reset_counts() {
 	num_trial = 0;
 	NB_VALUES = 3;
@@ -65,7 +65,7 @@ function beginTrials() {
 	if(rep_check == 0) {
 		REPRESENTATION = "text";
 	} else if(rep_check == 1) {
-		REPRESENTATION = "bar";
+		REPRESENTATION = "bubble";
 	}
 	
 	const MIN_VALUE = 0;
@@ -153,6 +153,8 @@ function beginTrials() {
 		.append('g')
 		.attr('transform', function(d, i){
 			switch(REPRESENTATION){
+				case 'bubble':
+					return 'translate(' + ((i%numCol)*_w + (pad/2)*-1) + ','+ ((Math.floor(i/numRow))*_h + (pad/2)*-1) +')'
 				case 'text':
 					return 'translate(' + ((i%numCol)*_w + (pad/2)*-1) + ','+ ((Math.floor(i/numRow))*_h + (pad/2)*-1) +')'
 				break;
@@ -224,7 +226,28 @@ function beginTrials() {
 			.attr('text-anchor','middle')
 			.attr('font-size', font_size+"px")
 			.text(d => padding(d))
-	} else if(REPRESENTATION == 'bar') {
+	} else if(REPRESENTATION == "bubble"){
+  
+		//that's to create a perceptual scaling by mapping square root of value to radius, but other scaling functions could be used
+		var circleRadiusScale = d3.scaleLinear()
+			.domain([Math.sqrt(MIN_VALUE), Math.sqrt(MAX_VALUE)])
+			.range([bubble_min_radius, bubble_max_radius]);
+		
+		//create an 'invisible' circle of size half the max size of a bubble, simply to make it possible to click the smaller circles easily.
+		sign.append('circle')
+		  .attr('cx', _w/2)
+		  .attr('cy', _w/2)
+		  .attr('r', bubble_max_radius/2)
+		  .style('fill', 'white')
+	  
+		// then, for each cell we appends a circle
+		sign.append('circle')
+		  .attr('cx', _w/2)
+		  .attr('cy', _w/2)
+		  .attr('r', d => circleRadiusScale(Math.sqrt(d)))
+		  .style('fill','black')
+	  }
+	else if(REPRESENTATION == 'bar') {
   
 		var bar_scale = d3.scaleLinear()
 			.domain([MIN_VALUE, MAX_VALUE])
